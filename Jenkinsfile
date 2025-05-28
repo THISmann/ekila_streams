@@ -1,10 +1,12 @@
 pipeline {
     agent any
     stages {
-        stage('Build') {
+        stage('Scan Sonarqube') {
             steps {
-                echo 'Building the project...'
-                // Ex: sh 'mvn clean package' (pour Java/Maven)
+                echo 'SonarQube Scan !! '
+                withSonarQubeEnv('SonarQube') { // 'SonarQube' is the name of the SonarQube server configured in Jenkins
+                    sh 'mvn clean package sonar:sonar' // Runs Maven build and SonarQube scan
+                }
             }
         }
         stage('Test') {
