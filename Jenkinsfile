@@ -27,7 +27,7 @@ pipeline {
                         withSonarQubeEnv('SonarQube') { // Ensure 'SonarQube' matches your Jenkins SonarQube server name
                             sh """
                                 ${scannerHome}/bin/sonar-scanner \
-                                -Dsonar.projectKey=simple_webapp \
+                                -Dsonar.projectKey=RadioManagementDjango \
                                 -Dsonar.sources=.
                             """
                         }
