@@ -1,24 +1,27 @@
 pipeline {
     agent any
+
     stages {
-        stage('Scan Sonarqube') {
+        stage('Hello') {
             steps {
-                echo 'SonarQube Scan !! '
-                withSonarQubeEnv('SonarQube') { // 'SonarQube' is the name of the SonarQube server configured in Jenkins
-                    sh 'mvn clean package sonar:sonar' // Runs Maven build and SonarQube scan
+                checkout scmGit(branches: [[name: '*/main']], extensions: [], userRemoteConfigs: [[url: 'https://github.com/THISmann/ekila_streams']])
+            }
+        }
+
+        stage('SCM') {
+            steps {
+                checkout scm
+            }
+        }
+
+        stage('SonarQube Analysis') {
+            steps {
+                script {
+                    def scannerHome = tool 'SonarQube'
+                    withSonarQubeEnv() {
+                        sh "${scannerHome}/bin/sonar-scanner"
+                    }
                 }
-            }
-        }
-        stage('Test') {
-            steps {
-                echo 'Running tests...'
-                // Ex: sh 'npm test' (pour Node.js)
-            }
-        }
-        stage('Deploy') {
-            steps {
-                echo 'Deploying...'
-                // Ex: sh 'docker push my-image'
             }
         }
     }
