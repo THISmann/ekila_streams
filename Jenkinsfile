@@ -27,7 +27,7 @@ pipeline {
                     sh 'pwd && ls -la'
                     
                     // Use withSonarQubeEnv to inject SonarQube server details
-                    withSonarQubeEnv('SonarQube') { // Replace 'SonarQube' with your SonarQube server name in Jenkins
+                    withSonarQubeEnv() { // Replace 'SonarQube' with your SonarQube server name in Jenkins
                         sh """
                             ${scannerHome}/bin/sonar-scanner \
                             -Dsonar.projectKey=RadioManagementDjango \
