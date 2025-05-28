@@ -48,7 +48,7 @@ pipeline {
     // Post-build actions
     post {
         always {
-            echo 'Pipeline execution completed'
+            sh 'ls -la ${WORKSPACE}/.scannerwork/report-task.txt || echo "report-task.txt not found"'
         }
         success {
             echo 'Pipeline completed successfully'
