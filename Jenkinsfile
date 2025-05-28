@@ -21,7 +21,9 @@ pipeline {
                 script {
                     def scannerHome = tool 'SonarQube Scanner'
                     withSonarQubeEnv() {
-                        sh "${scannerHome}/bin/sonar-scanner"
+                        sh " ${scannerHome}/bin/sonar-scanner \
+                        -Dsonar.projectKey=RadioManagementDjango \
+                        -Dsonar.sources=. "
                     }
                 }
             }
