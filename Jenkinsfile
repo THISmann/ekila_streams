@@ -31,7 +31,13 @@ pipeline {
                         sh """
                             ${scannerHome}/bin/sonar-scanner \
                             -Dsonar.projectKey=RadioManagementDjango \
-                            -Dsonar.sources=. 
+                            -Dsonar.sources=. \
+                            -Dsonar.host.url=\${SONAR_HOST_URL} \
+                            -Dsonar.login=\${SONAR_AUTH_TOKEN} \
+                            -Dsonar.projectBaseDir=${WORKSPACE} \
+                            -Dsonar.python.version=3 \
+                            -Dsonar.exclusions=**/tests/**,**/migrations/**,**/static/** \
+                            -X
                         """
                     }
                 }
