@@ -1,0 +1,269 @@
+# This file is distributed under the same license as the Django package.
+#
+# Translators:
+# Bruno Brouard <annoa.b@gmail.com>, 2021
+# Claude Paroz <claude@2xlibre.net>, 2013-2020
+# Claude Paroz <claude@2xlibre.net>, 2011,2013
+# Jannis Leidel <jannis@leidel.info>, 2011
+msgid ""
+msgstr ""
+"Project-Id-Version: django\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2021-11-29 17:38+0100\n"
+"PO-Revision-Date: 2021-03-04 20:53+0000\n"
+"Last-Translator: Bruno Brouard <annoa.b@gmail.com>\n"
+"Language-Team: French (http://www.transifex.com/django/django/language/fr/)\n"
+"Language: fr\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+
+msgid "First, enter a username and password. Then, you'll be able to edit more user options."
+msgstr ""
+"Saisissez tout d’abord un nom d’utilisateur et un mot de passe. Vous pourrez "
+"ensuite modifier plus d’options."
+
+msgid "Account"
+msgstr "Compte utilisateur"
+
+msgid "See Profile"
+msgstr "Voir le profil"
+
+msgid "Dashboard"
+msgstr "Tableau de bord"
+
+msgid "Jazzmin version"
+msgstr "Version de Jazzmin"
+
+msgid "Copyright"
+msgstr "Copyright"
+
+msgid "All rights reserved."
+msgstr "Tous droits réservés."
+
+msgid "UI Configuration"
+msgstr "Configuration de l'interface"
+
+msgid "Copy this info your settings file to persist these UI changes"
+msgstr ""
+"Copiez cette configuration dans votre fichier de paramètres pour conserver "
+"ces modifications de l'interface utilisateur"
+
+msgid "Confirm Import"
+msgstr "Confirmer l'import"
+
+msgid "Actions"
+msgstr "Actions"
+
+msgid "Some rows failed to validate"
+msgstr "Certaines lignes n'ont pas réussi à valider"
+
+msgid "Please correct these errors in your data where possible, then reupload it using the form above."
+msgstr "Veuillez corriger ces erreurs dans vos données, puis re téléchargez le à l'aide du formulaire ci-dessus."
+
+msgid "Row"
+msgstr "Ligne"
+
+msgid "Non field specific"
+msgstr "Non spécifique à un champ"
+
+#, python-format
+msgid "%(timesince)s ago"
+msgstr "Depuis %(timesince)s"
+
+msgid "This object doesn't have a change history. It probably wasn't added via this admin site."
+msgstr ""
+"Cet objet n’a pas d’historique de modification. Il n’a probablement pas été "
+"ajouté au moyen de ce site d’administration."
+
+msgid "Popup closing..."
+msgstr "Fenêtre en cours de fermeture…"
+
+msgid "The admin documentation system requires Python's <a href=\"%(link)s\">docutils</a> library."
+msgstr "Le système de documentation de l'interface d'administration nécessite la bibliothèque Python <a href=\"%(link)s\">docutils</a>."
+
+msgid "View function: <code>%(full_name)s</code>. Name: <code>%(url_name)s</code>."
+msgstr "Fonction de vue : <code>%(full_name)s</code>. Nom : <code>%(url_name)s</code>."
+
+msgid "General"
+msgstr "Général"
+
+msgid "Please enter your old password, for security's sake, and then enter your new password twice so we can verify you typed it in correctly."
+msgstr "Pour des raisons de sécurité, saisissez votre ancien mot de passe puis votre nouveau mot de passe à deux reprises afin de vérifier qu’il est correctement saisi."
+
+msgid "Deleted “{object}”."
+msgstr "« {object} » supprimé."
+
+msgid "Please correct the errors below."
+msgstr "Veuillez corriger les erreurs ci-dessous."
+
+# , user management
+msgid "User management"
+msgstr "Gestion des utilisateurs"
+
+msgid "email"
+msgstr "Adresse electronique"
+
+msgid "username"
+msgstr "nom d'utilisateur"
+
+msgid "password"
+msgstr "Mot de passe"
+
+msgid "Password"
+msgstr "Mot de passe"
+
+msgid "Password Confirmation"
+msgstr "confirmation du mot de passe"
+
+msgid "confirm number"
+msgstr "numéro de confirmation"
+
+msgid "is confirmed"
+msgstr "est confirmé"
+
+msgid "created by"
+msgstr "Créé par"
+
+msgid "role"
+msgstr "rôle"
+
+msgid "Confirm/Unconfirm selected users"
+msgstr "Confirmer/Déconfirmer les utilisateurs sélectionnés"
+
+#, Radio management
+msgid "Radio management"
+msgstr "Gestion des radios"
+
+msgid "name"
+msgstr "nom"
+
+msgid "url flux radio"
+msgstr "URL flux radio"
+
+msgid "url server radio"
+msgstr "URL du serveur radio"
+
+msgid "url api radio history"
+msgstr "URL de l'historique radio"
+
+msgid "url api radio current song"
+msgstr "URL de la chanson actuelle"
+
+msgid "sid"
+msgstr "SID"
+
+msgid "radio account port"
+msgstr "Port du compte de la radio"
+
+msgid "station id"
+msgstr "ID de la station"
+
+msgid "url pannel connexion"
+msgstr "URL du panel de connexion"
+
+msgid "username radio account"
+msgstr "Nom d'utilisateur du compte de la radio"
+
+msgid "id radioking"
+msgstr "ID Radioking"
+
+msgid "url cover default"
+msgstr "URL de l'image par défaut"
+
+msgid "url site"
+msgstr "URL du site"
+
+msgid "server type"
+msgstr "Type du serveur"
+
+msgid "radio image icon"
+msgstr "Image de l'icône de la radio"
+
+msgid "is active"
+msgstr "est actif"
+
+msgid "created at"
+msgstr "créé le"
+
+msgid "updated at"
+msgstr "mis à jour le"
+
+msgid "title"
+msgstr "titre"
+
+msgid "link"
+msgstr "lien"
+
+msgid "radio"
+msgstr "radio"
+
+msgid "radio menu"
+msgstr "menu radio"
+
+msgid "Activate/Deactivate selected radios"
+msgstr "Activer/Désactiver les radios sélectionnées"
+
+msgid "user"
+msgstr "utilisateur"
+
+#, Advertising management
+msgid "Advertising management"
+msgstr "Gestion des publicités"
+
+msgid "Publicity"
+msgstr "Publicité"
+
+msgid "publicity image"
+msgstr "image de la publicité"
+
+msgid "description"
+msgstr "description"
+
+msgid "is enable"
+msgstr "est activé"
+
+msgid "is created at"
+msgstr "est créé"
+
+msgid "is updated at"
+msgstr "est mis à jour"
+
+msgid "Enable/Disable selected ads"
+msgstr "Activer/Désactiver les publicités sélectionnées"
+
+msgid "User (Client)"
+msgstr "Utilisateur (Client)"
+
+msgid "Passwords don't match"
+msgstr "Les mots de passe ne correspondent pas"
+
+msgid "Required. 150 characters or fewer. Lowercase a-z and uppercase A-Z letters, numbers"
+msgstr "Requis. 150 caractères ou moins. Lettres minuscules a-z et majuscules A-Z, chiffres"
+
+msgid "Personal Info"
+msgstr "Informations personnelles"
+
+msgid "Permissions"
+msgstr "Permissions"
+
+msgid "Important dates"
+msgstr "Dates importantes"
+
+msgid "Thanks for spending some quality time with the Web site today."
+msgstr "Merci d'avoir passé du temps de qualité avec notre site web aujourd'hui."
+
+msgid "Radio Web App Admin"
+msgstr "Administration de Radio Web App"
+
+msgid "Image size must be less than %(size)s KB"
+msgstr "La taille de l'image doit être inférieure à %(size)s Ko."
+
+msgid "Please correct the error below."
+msgstr "Veuillez corriger l'erreur ci-dessous."
+
+#, python-brace-format
+msgid "Could not reverse url from {instance}"
+msgstr "Impossible de résoudre l'URL de {instance}"

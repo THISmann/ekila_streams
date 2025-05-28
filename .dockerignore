@@ -1,0 +1,16 @@
+**/local_settings.py
+**/settings_prod.py
+*/local_settings.py
+.git
+.mypy_cache
+.pytest_cache
+.vscode
+docs/
+local_settings.py
+uploads/
+media/
+__pycache__/
+Dockerfile
+mkdocs.yml
+README.md
+db.sqlite3
