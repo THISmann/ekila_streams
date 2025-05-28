@@ -24,7 +24,7 @@ pipeline {
                     echo "SonarQube Scanner Home: ${scannerHome}"
                     
                     // Ensure workspace is accessible
-                    sh 'pwd && ls -la'
+                    sh 'java -version'
                     
                     // Use withSonarQubeEnv to inject SonarQube server details
                     withSonarQubeEnv() { // Replace 'SonarQube' with your SonarQube server name in Jenkins
