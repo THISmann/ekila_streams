@@ -19,8 +19,15 @@ pipeline {
         stage('SonarQube Analysis') {
             steps {
                 script {
-                    def scannerHome = tool 'SonarQube Scanner'
-                    withSonarQubeEnv() {
+                    // Get the SonarQube Scanner home directory
+                    def scannerHome = tool name: 'SonarQube Scanner', type: 'hudson.plugins.sonar.SonarRunnerInstallation'
+                    echo "SonarQube Scanner Home: ${scannerHome}"
+                    
+                    // Ensure workspace is accessible
+                    sh 'pwd && ls -la'
+                    
+                    // Use withSonarQubeEnv to inject SonarQube server details
+                    withSonarQubeEnv('SonarQube') { // Replace 'SonarQube' with your SonarQube server name in Jenkins
                         sh """
                             ${scannerHome}/bin/sonar-scanner \
                             -Dsonar.projectKey=RadioManagementDjango \
@@ -28,7 +35,8 @@ pipeline {
                             -Dsonar.host.url=\${SONAR_HOST_URL} \
                             -Dsonar.login=\${SONAR_AUTH_TOKEN} \
                             -Dsonar.projectBaseDir=${WORKSPACE} \
-                            -Dsonar.java.binaries=**/*.java \
+                            -Dsonar.python.version=3 \
+                            -Dsonar.exclusions=**/tests/**,**/migrations/**,**/static/** \
                             -X
                         """
                     }
