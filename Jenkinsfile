@@ -27,7 +27,7 @@ pipeline {
                     sh 'java -version'
                     
                     // Use withSonarQubeEnv to inject SonarQube server details
-                    withSonarQubeEnv(["JAVA_HOME=${tool 'openjdk-17'}"]) { // Replace 'SonarQube' with your SonarQube server name in Jenkins
+                    withSonarQubeEnv() { // Replace 'SonarQube' with your SonarQube server name in Jenkins
                         // sh """
                         //     ${scannerHome}/bin/sonar-scanner \
                         //     -Dsonar.projectKey=RadioManagementDjango \
