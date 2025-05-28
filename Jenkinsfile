@@ -19,21 +19,9 @@ pipeline {
         stage('SonarQube Analysis') {
             steps {
                 script {
-                    try {
-                        // Define SonarQube scanner tool
-                        def scannerHome = tool 'SonarQube Scanner'
-
-                        // Run SonarQube analysis with environment configuration
-                        withSonarQubeEnv('SonarQube') { // Ensure 'SonarQube' matches your Jenkins SonarQube server name
-                            sh """
-                                ${scannerHome}/bin/sonar-scanner \
-                                -Dsonar.projectKey=RadioManagementDjango \
-                                -Dsonar.sources=.
-                            """
-                        }
-                    } catch (Exception e) {
-                        echo "SonarQube Analysis failed: ${e.message}"
-                        error 'Aborting due to SonarQube analysis failure'
+                    def scannerHome = tool 'SonarScanner'
+                    withSonarQubeEnv() {
+                        sh "${scannerHome}/bin/sonar-scanner"
                     }
                 }
             }
