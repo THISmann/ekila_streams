@@ -28,17 +28,18 @@ pipeline {
                     
                     // Use withSonarQubeEnv to inject SonarQube server details
                     withSonarQubeEnv() { // Replace 'SonarQube' with your SonarQube server name in Jenkins
-                        sh """
-                            ${scannerHome}/bin/sonar-scanner \
-                            -Dsonar.projectKey=RadioManagementDjango \
-                            -Dsonar.sources=. \
-                            -Dsonar.host.url=\${SONAR_HOST_URL} \
-                            -Dsonar.login=\${SONAR_AUTH_TOKEN} \
-                            -Dsonar.projectBaseDir=${WORKSPACE} \
-                            -Dsonar.python.version=3 \
-                            -Dsonar.exclusions=**/tests/**,**/migrations/**,**/static/** \
-                            -X
-                        """
+                        // sh """
+                        //     ${scannerHome}/bin/sonar-scanner \
+                        //     -Dsonar.projectKey=RadioManagementDjango \
+                        //     -Dsonar.sources=. \
+                        //     -Dsonar.host.url=\${SONAR_HOST_URL} \
+                        //     -Dsonar.login=\${SONAR_AUTH_TOKEN} \
+                        //     -Dsonar.projectBaseDir=${WORKSPACE} \
+                        //     -Dsonar.python.version=3 \
+                        //     -Dsonar.exclusions=**/tests/**,**/migrations/**,**/static/** \
+                        //     -X
+                        // """
+                            sh "${scannerHome}/bin/sonar-scanner"
                     }
                 }
             }
@@ -48,7 +49,8 @@ pipeline {
     // Post-build actions
     post {
         always {
-            sh 'ls -la ${WORKSPACE}/.scannerwork/report-task.txt || echo "report-task.txt not found"'
+            // sh 'ls -la ${WORKSPACE}/.scannerwork/report-task.txt || echo "report-task.txt not found"'
+            echo 'test premier !'
         }
         success {
             echo 'Pipeline completed successfully'
