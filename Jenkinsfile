@@ -4,9 +4,9 @@ pipeline {
     environment {
         DOCKER_IMAGE = "ekilastreams-back:1.0"
         COMPOSE_PROJECT_NAME = "ekila_streams"
-        SONAR_PROJECT_KEY = 
-        SONAR_SCANNER_HOME = 
-        SONAR_TOKEN = 
+        // SONAR_PROJECT_KEY = 
+        // SONAR_SCANNER_HOME = 
+        // SONAR_TOKEN = 
     }
     stages {
         // Stage to checkout code from Git repository
