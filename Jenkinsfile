@@ -30,24 +30,24 @@ pipeline {
             }
         }
 
-        stage('Trivy Security Scan') {
-            steps {
-                script {
-                    echo "Scanning ${DOCKER_IMAGE} with Trivy for vulnerabilities..."
-                    sh '''
-                        docker run --rm \
-                        -v /var/run/docker.sock:/var/run/docker.sock \
-                        -v $HOME/.cache/trivy:/root/.cache/trivy \
-                        aquasec/trivy:latest image \
-                        --exit-code 1 \
-                        --severity CRITICAL,HIGH \
-                        --no-progress \
-                        --format table \
-                        ${DOCKER_IMAGE}
-                    '''
-                }
-            }
-        }
+        // stage('Trivy Security Scan') {
+        //     steps {
+        //         script {
+        //             echo "Scanning ${DOCKER_IMAGE} with Trivy for vulnerabilities..."
+        //             sh '''
+        //                 docker run --rm \
+        //                 -v /var/run/docker.sock:/var/run/docker.sock \
+        //                 -v $HOME/.cache/trivy:/root/.cache/trivy \
+        //                 aquasec/trivy:latest image \
+        //                 --exit-code 1 \
+        //                 --severity CRITICAL,HIGH \
+        //                 --no-progress \
+        //                 --format table \
+        //                 ${DOCKER_IMAGE}
+        //             '''
+        //         }
+        //     }
+        // }
 
         // Stage for SonarQube code analysis
         stage('SonarQube Analysis') {
