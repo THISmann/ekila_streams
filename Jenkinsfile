@@ -1,6 +1,8 @@
 pipeline {
     // Run on any available agent
-    agent any
+    agent {
+        docker { image 'node:22.16.0-alpine3.21' }
+    }
     environment {
         DOCKER_IMAGE = "ekilastreams-back:1.0"
         COMPOSE_PROJECT_NAME = "ekila_streams"
