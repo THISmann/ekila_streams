@@ -25,7 +25,7 @@ pipeline {
                     sh '''
                     docker --version
                     docker compose version
-                    docker-compose -f docker-compose.yml up -d --build
+                    docker compose -f docker-compose.yml down --rmi local
                     '''
                 }
             }
