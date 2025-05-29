@@ -24,7 +24,7 @@ pipeline {
                     echo "Building Docker image ${DOCKER_IMAGE} using docker-compose..."
                     sh '''
                     docker --version
-                    docker compose version
+                    docker-compose version
                     docker info
                     '''
                 }
