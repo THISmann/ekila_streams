@@ -88,8 +88,7 @@ pipeline {
         always {
             // sh 'ls -la ${WORKSPACE}/.scannerwork/report-task.txt || echo "report-task.txt not found"'
             // echo 'test premier !'
-            echo "Cleaning up Docker images and workspace..."
-            sh 'docker-compose -f docker-compose.yml down --rmi local'
+            echo "Cleaning up Docker images and workspace..." 
             cleanWs()
         }
         success {
