@@ -70,8 +70,7 @@ pipeline {
                         -Dsonar.projectKey=RadioManagementDjango \
                         -Dsonar.sources=. \
                         -Dsonar.host.url=http://sonarqube:9000 \
-                        -Dsonar.token=sqp_b1cec723d0f15c67f4958480e8071c4bdb42a115 \
-                        -Dsonar.exclusions=**/*.js,**/*.ts  # Skip JavaScript
+                        -Dsonar.token=sqp_b1cec723d0f15c67f4958480e8071c4bdb42a115
                         """
                          //   sh "${scannerHome}/bin/sonar-scanner"
                     }
