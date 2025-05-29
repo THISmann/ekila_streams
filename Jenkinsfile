@@ -22,7 +22,7 @@ pipeline {
             steps {
                 script {
                     echo "Building Docker image ${DOCKER_IMAGE} using docker-compose..."
-                    sh 'docker-compose -f docker-compose.yml build ekila-streams'
+                    sh 'docker compose -f docker-compose.yml up -d --build '
                 }
             }
         }
