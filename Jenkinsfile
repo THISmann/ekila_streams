@@ -4,6 +4,9 @@ pipeline {
     environment {
         DOCKER_IMAGE = "ekilastreams-back:1.0"
         COMPOSE_PROJECT_NAME = "ekila_streams"
+        SONAR_PROJECT_KEY = 
+        SONAR_SCANNER_HOME = 
+        SONAR_TOKEN = 
     }
     stages {
         // Stage to checkout code from Git repository
@@ -61,19 +64,15 @@ pipeline {
                     sh 'java -version'
                     
                     // Use withSonarQubeEnv to inject SonarQube server details
-                    withSonarQubeEnv() { // Replace 'SonarQube' with your SonarQube server name in Jenkins
-                        // sh """
-                        //     ${scannerHome}/bin/sonar-scanner \
-                        //     -Dsonar.projectKey=RadioManagementDjango \
-                        //     -Dsonar.sources=. \
-                        //     -Dsonar.host.url=\${SONAR_HOST_URL} \
-                        //     -Dsonar.login=\${SONAR_AUTH_TOKEN} \
-                        //     -Dsonar.projectBaseDir=${WORKSPACE} \
-                        //     -Dsonar.python.version=3 \
-                        //     -Dsonar.exclusions=**/tests/**,**/migrations/**,**/static/** \
-                        //     -X
-                        // """
-                            sh "${scannerHome}/bin/sonar-scanner"
+                    withSonarQubeEnv(credentialsId: 'RadioManagement-token') { // Replace 'SonarQube' with your SonarQube server name in Jenkins
+                     sh """
+                        sonar-scanner \
+                        -Dsonar.projectKey=RadioManagementDjango \
+                        -Dsonar.sources=. \
+                        -Dsonar.host.url=http://localhost:9000 \
+                        -Dsonar.token=sqp_b1cec723d0f15c67f4958480e8071c4bdb42a115
+                        """
+                         //   sh "${scannerHome}/bin/sonar-scanner"
                     }
                 }
             }
