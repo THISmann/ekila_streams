@@ -5,7 +5,7 @@ pipeline {
         DOCKER_IMAGE = "ekilastreams-back:1.0"
         COMPOSE_PROJECT_NAME = "ekila_streams"
         // SONAR_PROJECT_KEY = 
-        // SONAR_SCANNER_HOME = 
+        // SONAR_SCANNER_HOME = tool 'SonarQubeScanner'
         // SONAR_TOKEN = 
     }
     stages {
@@ -66,7 +66,7 @@ pipeline {
                     // Use withSonarQubeEnv to inject SonarQube server details
                     withSonarQubeEnv(credentialsId: 'RadioManagement-token') { // Replace 'SonarQube' with your SonarQube server name in Jenkins
                      sh """
-                        sonar-scanner \
+                        ${scannerHome}/bin/sonar-scanner \
                         -Dsonar.projectKey=RadioManagementDjango \
                         -Dsonar.sources=. \
                         -Dsonar.host.url=http://localhost:9000 \
