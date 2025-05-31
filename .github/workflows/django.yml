@@ -48,6 +48,11 @@ jobs:
     
     - name: SonarQube Scan
       uses: SonarSource/sonarqube-scan-action@v1
+      with:
+        projectBaseDir: .
+        args: >
+          -Dsonar.organization=my-fuh
+          -Dsonar.projectKey=my-Django
       env:
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         SONAR_HOST_URL: ${{ vars.SONAR_HOST_URL }}
