@@ -17,11 +17,16 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
+
     - name: Set up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v3
       with:
         python-version: ${{ matrix.python-version }}
+
     - name: build the docker compose
       run: |
         echo " bonjour !!! "
+
+    - name: Build Docker
+      run: docker-compose -f docker/docker-compose.build.yml build
   
