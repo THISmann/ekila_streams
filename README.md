@@ -22,3 +22,11 @@
 
 
 ### relall
+docker run --rm \
+  -v $(pwd)/zap-reports:/zap/wrk:rw \
+  -t ghcr.io/zaproxy/zaproxy:stable \
+  zap-baseline.py -t http://host.docker.internal:8030/admin -r zap_report.html
+
+docker run --rm \
+  -v /var/run/docker.sock:/var/run/docker.sock \
+  aquasec/trivy image ekilastreams:latest
