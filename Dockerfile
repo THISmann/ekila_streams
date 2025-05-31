@@ -1,60 +1,143 @@
-FROM python:3.11.0
-ENV PYTHONUNBUFFERED 1
-ENV TZ=Europe/Paris
+# FROM python:3.11.0
+# ENV PYTHONUNBUFFERED 1
+# ENV TZ=Europe/Paris
+# RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
+# RUN groupadd -r ekiladm; \
+#         useradd -r -m -g ekiladm ekiladm; \
+#         mkdir /app; \
+#         chown ekiladm /app; \
+#         apt-get update; \
+#         apt-get install -y locales postgresql-client locales-all python3-dev
+
+# ARG DJANGO_DEV_SERVER_PORT=8030
+# ARG POSTGRES_PORT=5432
+# ARG POSTGRES_HOST=db
+# ARG FRONT_HOST=http://localhost:8030
+# ARG FRONTEND_URL=$FRONT_HOST/reset/password/
+# ARG DJANGO_STATIC_ROOT=/var/www/static
+# ARG DJANGO_MEDIA_ROOT=/var/www/media
+# ARG POSTGRES_DATA=/var/lib/postgresql/data/
+
+# ENV DJANGO_DEV_SERVER_PORT=$DJANGO_DEV_SERVER_PORT\
+#         FRONTEND_URL=$FRONTEND_URL\
+#         DJANGO_STATIC_ROOT=$DJANGO_STATIC_ROOT\
+#         FRONT_HOST=$FRONT_HOST \
+#         DJANGO_MEDIA_ROOT=$DJANGO_MEDIA_ROOT\
+#         POSTGRES_DATA=$POSTGRES_DATA\
+#         POSTGRES_PORT=$POSTGRES_PORT\
+#         POSTGRES_HOST=$POSTGRES_HOST\
+#         POSTGRES_HOST=$POSTGRES_HOST\
+#         GOSU_VERSION=1.17
+
+# RUN apt-get update; \
+#         apt-get install -y --no-install-recommends ca-certificates gnupg wget dos2unix; \
+#         rm -rf /var/lib/apt/lists/*; \
+#         dpkgArch="$(dpkg --print-architecture | awk -F- '{ print $NF }')"; \
+#         wget -O /usr/local/bin/gosu "https://github.com/tianon/gosu/releases/download/$GOSU_VERSION/gosu-$dpkgArch"; \
+#         wget -O /usr/local/bin/gosu.asc "https://github.com/tianon/gosu/releases/download/$GOSU_VERSION/gosu-$dpkgArch.asc"; \
+#         export GNUPGHOME="$(mktemp -d)"; \
+#         gpg --batch --keyserver hkps://keys.openpgp.org --recv-keys B42F6819007F00F88E364FD4036A9C25BF357DD4; \
+#         gpg --batch --verify /usr/local/bin/gosu.asc /usr/local/bin/gosu; \
+#         gpgconf --kill all; \
+#         rm -rf /usr/local/bin/gosu.asc; \
+#         chmod +x /usr/local/bin/gosu; \
+#         gosu --version; \
+#         gosu nobody true
+
+# WORKDIR /app
+# RUN pip3 install poetry && pip3 install uwsgi whitenoise daphne
+# COPY poetry.lock pyproject.toml /app/
+# RUN poetry export -f requirements.txt --without-hashes --output requirements.txt
+# RUN poetry config virtualenvs.create false --local  && poetry lock --no-update && poetry install --without dev
+# COPY . /app
+# COPY requirements.txt /app/requirements.txt
+# RUN pip3 install -r /app/requirements.txt
+# COPY entrypoint.sh /entrypoint.sh
+# RUN chown -R ekiladm:ekiladm /app
+# RUN tr -d '\r' < /entrypoint.sh > /tmp/entrypoint.sh && mv /tmp/entrypoint.sh /entrypoint.sh
+# RUN chmod +x /entrypoint.sh
+# ENTRYPOINT ["/entrypoint.sh"]
+# EXPOSE $DJANGO_DEV_SERVER_PORT
+
+FROM python:3.11.0-slim
+
+# Set environment variables
+ENV PYTHONUNBUFFERED=1 \
+    TZ=Europe/Paris \
+    GOSU_VERSION=1.17
+
+# Set timezone
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
-RUN groupadd -r ekiladm; \
-        useradd -r -m -g ekiladm ekiladm; \
-        mkdir /app; \
-        chown ekiladm /app; \
-        apt-get update; \
-        apt-get install -y locales postgresql-client locales-all python3-dev
 
-ARG DJANGO_DEV_SERVER_PORT=8030
-ARG POSTGRES_PORT=5432
-ARG POSTGRES_HOST=db
-ARG FRONT_HOST=http://localhost:8030
-ARG FRONTEND_URL=$FRONT_HOST/reset/password/
-ARG DJANGO_STATIC_ROOT=/var/www/static
-ARG DJANGO_MEDIA_ROOT=/var/www/media
-ARG POSTGRES_DATA=/var/lib/postgresql/data/
+# Create user and app directory
+RUN groupadd -r ekiladm && \
+    useradd -r -m -g ekiladm ekiladm && \
+    mkdir -p /app && chown ekiladm:ekiladm /app
 
-ENV DJANGO_DEV_SERVER_PORT=$DJANGO_DEV_SERVER_PORT\
-        FRONTEND_URL=$FRONTEND_URL\
-        DJANGO_STATIC_ROOT=$DJANGO_STATIC_ROOT\
-        FRONT_HOST=$FRONT_HOST \
-        DJANGO_MEDIA_ROOT=$DJANGO_MEDIA_ROOT\
-        POSTGRES_DATA=$POSTGRES_DATA\
-        POSTGRES_PORT=$POSTGRES_PORT\
-        POSTGRES_HOST=$POSTGRES_HOST\
-        POSTGRES_HOST=$POSTGRES_HOST\
-        GOSU_VERSION=1.17
+# Install system dependencies
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+        ca-certificates \
+        gnupg \
+        wget \
+        curl \
+        locales \
+        postgresql-client \
+        python3-dev \
+        dos2unix \
+    && rm -rf /var/lib/apt/lists/*
 
-RUN apt-get update; \
-        apt-get install -y --no-install-recommends ca-certificates gnupg wget dos2unix; \
-        rm -rf /var/lib/apt/lists/*; \
-        dpkgArch="$(dpkg --print-architecture | awk -F- '{ print $NF }')"; \
-        wget -O /usr/local/bin/gosu "https://github.com/tianon/gosu/releases/download/$GOSU_VERSION/gosu-$dpkgArch"; \
-        wget -O /usr/local/bin/gosu.asc "https://github.com/tianon/gosu/releases/download/$GOSU_VERSION/gosu-$dpkgArch.asc"; \
-        export GNUPGHOME="$(mktemp -d)"; \
-        gpg --batch --keyserver hkps://keys.openpgp.org --recv-keys B42F6819007F00F88E364FD4036A9C25BF357DD4; \
-        gpg --batch --verify /usr/local/bin/gosu.asc /usr/local/bin/gosu; \
-        gpgconf --kill all; \
-        rm -rf /usr/local/bin/gosu.asc; \
-        chmod +x /usr/local/bin/gosu; \
-        gosu --version; \
-        gosu nobody true
+# Install gosu
+RUN dpkgArch="$(dpkg --print-architecture | awk -F- '{ print $NF }')" && \
+    wget -O /usr/local/bin/gosu "https://github.com/tianon/gosu/releases/download/${GOSU_VERSION}/gosu-${dpkgArch}" && \
+    wget -O /usr/local/bin/gosu.asc "https://github.com/tianon/gosu/releases/download/${GOSU_VERSION}/gosu-${dpkgArch}.asc" && \
+    export GNUPGHOME="$(mktemp -d)" && \
+    gpg --batch --keyserver hkps://keys.openpgp.org --recv-keys B42F6819007F00F88E364FD4036A9C25BF357DD4 && \
+    gpg --batch --verify /usr/local/bin/gosu.asc /usr/local/bin/gosu && \
+    rm -rf "$GNUPGHOME" /usr/local/bin/gosu.asc && \
+    chmod +x /usr/local/bin/gosu && \
+    gosu --version && gosu nobody true
 
+# Set working directory
 WORKDIR /app
-RUN pip3 install poetry && pip3 install uwsgi whitenoise daphne
-COPY poetry.lock pyproject.toml /app/
-RUN poetry export -f requirements.txt --without-hashes --output requirements.txt
-RUN poetry config virtualenvs.create false --local  && poetry lock --no-update && poetry install --without dev
-COPY . /app
-COPY requirements.txt /app/requirements.txt
-RUN pip3 install -r /app/requirements.txt
+
+# Install Python dependencies
+RUN pip install --upgrade pip && \
+    pip install poetry uwsgi whitenoise daphne
+
+# Copy dependency files first (for Docker cache)
+COPY pyproject.toml poetry.lock /app/
+
+# Configure Poetry and install dependencies
+RUN poetry config virtualenvs.create false --local && \
+    poetry install --no-root --without dev
+
+# Export requirements.txt if needed (optional)
+# RUN poetry export -f requirements.txt --without-hashes -o requirements.txt
+
+# Copy full project
+COPY . /app/
+
+# If using entrypoint
 COPY entrypoint.sh /entrypoint.sh
+RUN dos2unix /entrypoint.sh && chmod +x /entrypoint.sh
+
+# Set permissions
 RUN chown -R ekiladm:ekiladm /app
-RUN tr -d '\r' < /entrypoint.sh > /tmp/entrypoint.sh && mv /tmp/entrypoint.sh /entrypoint.sh
-RUN chmod +x /entrypoint.sh
+
+# Environment Variables (runtime)
+ENV DJANGO_DEV_SERVER_PORT=8030 \
+    POSTGRES_PORT=5432 \
+    POSTGRES_HOST=db \
+    FRONT_HOST=http://localhost:8030 \
+    FRONTEND_URL=http://localhost:8030/reset/password/ \
+    DJANGO_STATIC_ROOT=/var/www/static \
+    DJANGO_MEDIA_ROOT=/var/www/media \
+    POSTGRES_DATA=/var/lib/postgresql/data/
+
+# Expose port
+EXPOSE ${DJANGO_DEV_SERVER_PORT}
+
+# Entrypoint
 ENTRYPOINT ["/entrypoint.sh"]
-EXPOSE $DJANGO_DEV_SERVER_PORT
+
