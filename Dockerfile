@@ -113,7 +113,7 @@ RUN poetry config virtualenvs.create false --local && \
     poetry install --no-root --without dev
 
 # Export requirements.txt if needed (optional)
-# RUN poetry export -f requirements.txt --without-hashes -o requirements.txt
+RUN poetry export -f requirements.txt --without-hashes -o requirements.txt
 
 # Copy full project
 COPY . /app/
