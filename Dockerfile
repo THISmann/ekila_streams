@@ -45,7 +45,7 @@ RUN apt-get update; \
         gosu nobody true
 
 WORKDIR /app
-RUN pip3 install poetry && pip3 install uwsgi whitenoise daphne
+RUN pip3 install poetry && pip3 install uwsgi whitenoise daphne poetry-plugin-export
 COPY poetry.lock pyproject.toml /app/
 RUN poetry export -f requirements.txt --without-hashes --output requirements.txt
 RUN poetry config virtualenvs.create false --local  && poetry lock --no-update && poetry install --without dev
