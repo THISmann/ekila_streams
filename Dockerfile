@@ -53,7 +53,7 @@ RUN poetry export -f requirements.txt --without-hashes --output requirements.txt
 # Split the failing command for debugging
 RUN poetry config virtualenvs.create false --local
 RUN poetry lock
-RUN poetry install  
+RUN poetry install --verbose 
 
 COPY . /app
 COPY requirements.txt /app/requirements.txt
