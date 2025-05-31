@@ -31,7 +31,7 @@ pipeline {
                         docker-compose --version
                         
                         # Fix permissions if needed
-                        sudo chown -R jenkins:jenkins .
+                        chown -R jenkins:jenkins .
                         
                         # Build and deploy
                         docker-compose -f docker-compose.yml up -d --build
