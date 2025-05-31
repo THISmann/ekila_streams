@@ -45,7 +45,12 @@ jobs:
 
     - name: List Docker Images
       run: docker images
-      
+    
+    - name: Install SonarQube Scanner
+      run: |
+        wget https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-6.2.1.4610-linux.zip
+        unzip sonar-scanner-cli-6.2.1.4610-linux.zip
+        mv sonar-scanner-6.2.1.4610-linux sonar-scanner
     # - name: Run Trivy Vulnerability Scan
     #   run: |
     #     trivy image --exit-code 1 --severity HIGH,CRITICAL ekila-streams
