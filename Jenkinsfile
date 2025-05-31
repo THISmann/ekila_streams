@@ -34,7 +34,7 @@ pipeline {
                         #chown -R jenkins:jenkins .
                         
                         # Build and deploy
-                        docker-compose -f docker-compose.yml up -d --build
+                        #docker-compose -f docker-compose.yml up -d --build
                         '''
                 }
             }
