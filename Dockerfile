@@ -48,7 +48,13 @@ WORKDIR /app
 RUN pip3 install poetry && pip3 install uwsgi whitenoise daphne poetry-plugin-export
 COPY poetry.lock pyproject.toml /app/
 RUN poetry export -f requirements.txt --without-hashes --output requirements.txt
-RUN poetry config virtualenvs.create false --local  && poetry lock --no-update && poetry install --without dev
+
+#RUN poetry config virtualenvs.create false --local  && poetry lock --no-update && poetry install --without dev
+# Split the failing command for debugging
+RUN poetry config virtualenvs.create false --local
+RUN poetry lock --no-update
+RUN poetry install --without dev
+
 COPY . /app
 COPY requirements.txt /app/requirements.txt
 RUN pip3 install -r /app/requirements.txt
