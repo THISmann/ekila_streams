@@ -34,4 +34,19 @@ jobs:
 
     - name: Build Docker
       run: docker-compose -f docker-compose.yml up -d --build --no-cache
+
+    - name: Install Trivy
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y wget
+        wget https://github.com/aquasecurity/trivy/releases/download/v0.58.2/trivy_0.58.2_Linux-64bit.deb
+        sudo dpkg -i trivy_0.58.2_Linux-64bit.deb
+      # You can alternatively use a Trivy GitHub Action like `aquasecurity/trivy-action` if preferred.
+
+    - name: Run Trivy Vulnerability Scan
+      run: |
+        trivy image --exit-code 1 --severity HIGH,CRITICAL ekila-streams
+      # Replace 'ekila-streams' with the actual image name from your docker-compose.yml.
+      # --exit-code 1 makes the step fail if HIGH or CRITICAL vulnerabilities are found.
+      # Adjust severity levels (e.g., MEDIUM,LOW) as needed.
   
