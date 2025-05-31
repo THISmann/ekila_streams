@@ -1,16 +1,16 @@
 version: "3.8"
-
 services:
   db:
-    image: postgres
+    image: postgres:latest
     restart: unless-stopped
     environment:
       - POSTGRES_PASSWORD=8Fny?aXEFkh9ePA3
     volumes:
-      - "postgres-data:/var/lib/postgresql/data/"
+      - postgres-data:/var/lib/postgresql/data
+
   redis:
-    restart: unless-stopped
     image: redis:7.0.5-alpine
+    restart: unless-stopped
     ports:
       - "6379:6379"
 
@@ -23,10 +23,11 @@ services:
       - POSTGRES_USER=postgres
       - POSTGRES_HOST=db
       - POSTGRES_PORT=5432
+      - POSTGRES_PASSWORD=8Fny?aXEFkh9ePA3  # Added to match db
     volumes:
       - .:/app
-      - "staticfiles-data:/var/www/static"
-      - "media-data:/var/www/media"
+      - staticfiles-data:/var/www/static
+      - media-data:/var/www/media
     depends_on:
       - db
       - redis
