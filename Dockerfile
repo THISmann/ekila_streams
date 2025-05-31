@@ -52,7 +52,7 @@ RUN poetry export -f requirements.txt --without-hashes --output requirements.txt
 #RUN poetry config virtualenvs.create false --local  && poetry lock --no-update && poetry install --without dev
 # Split the failing command for debugging
 RUN poetry config virtualenvs.create false --local
-RUN poetry lock --no-update
+RUN poetry lock
 RUN poetry install --without dev
 
 COPY . /app
