@@ -25,11 +25,17 @@ pipeline {
             steps {
                 script {
                     echo "Building Docker image ${DOCKER_IMAGE} using docker-compose..."
-                    sh '''
-                    docker --version
-                    docker-compose version
-                    docker-compose -f docker-compose.yml up -d --build
-                    '''
+                     sh '''
+                        # Verify versions
+                        docker --version
+                        docker-compose --version
+                        
+                        # Fix permissions if needed
+                        sudo chown -R jenkins:jenkins .
+                        
+                        # Build and deploy
+                        docker-compose -f docker-compose.yml up -d --build
+                        '''
                 }
             }
         }
