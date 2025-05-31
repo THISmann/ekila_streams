@@ -147,7 +147,7 @@ static/rest_framework
 uploads/
 media/
 .idea/
-poetry.lock
+#poetry.lock
 
 mp3_files/
 
