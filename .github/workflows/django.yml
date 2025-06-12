@@ -1,129 +1,91 @@
-name: Build
+name: Django CI
 
 on:
   push:
-    branches:
-      - main
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
 
 jobs:
   build:
-    name: Build
+
     runs-on: ubuntu-latest
+    strategy:
+      max-parallel: 4
+      matrix:
+        python-version: [3.9]
+
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4  # Updated to latest version
-        with:
-          fetch-depth: 0  # Full history for better analysis relevancy
+    - uses: actions/checkout@v4
 
-      - name: Set up JDK 17
-        uses: actions/setup-java@v4
-        with:
-          java-version: '17'  # Required for SonarQube scanner
-          distribution: 'temurin'
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v3
+      with:
+        python-version: ${{ matrix.python-version }}
 
-      - name: Cache SonarQube packages
-        uses: actions/cache@v4
-        with:
-          path: ~/.sonar/cache
-          key: ${{ runner.os }}-sonar-${{ hashFiles('**/pom.xml', '**/*.gradle') }}
-          restore-keys: ${{ runner.os }}-sonar-
+    - name: build the docker compose
+      run: |
+        echo " bonjour !!! "
 
-      - name: Import SonarQube server certificate
-        run: |
-          # Download the SonarQube server certificate
-          echo -n | openssl s_client -connect ${{ secrets.SONAR_HOST_URL }}:443 | sed -ne '/-BEGIN CERTIFICATE-/,/-END CERTIFICATE-/p' > sonarqube-cert.pem
-          # Import the certificate into the Java truststore
-          keytool -import -trustcacerts -file sonarqube-cert.pem -keystore $JAVA_HOME/lib/security/cacerts -storepass changeit -noprompt || true
-        env:
-          JAVA_HOME: ${{ env.JAVA_HOME_17_X64 }}  # Ensure correct Java home for JDK 17
+    - name: Install Docker Compose
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y docker-compose
 
-      - name: Run SonarQube Scan
-        uses: sonarsource/sonarqube-scan-action@v3  # Updated to latest version
-        env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
-        with:
-          args: >
-            -Dsonar.projectKey=ekila_streams
-            -Dsonar.projectName=EkilaStreams
-            -Dsonar.sources=.
-            -Dsonar.exclusions=**/node_modules/**,**/build/**,**/dist/**
-            -Dsonar.java.binaries=**/bin/**  # For ASP.NET Core
-            -Dsonar.dart.analysis.enabled=true  # For Flutter/Dart
+    - name: Build Docker
+      run: docker-compose -f docker-compose.yml up -d --build --no-cache
 
-      - name: Check SonarQube Quality Gate
-        uses: sonarsource/sonarqube-quality-gate-action@v2  # Updated to latest version
-        timeout-minutes: 5
-        env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        if: success()  # Run only if scan succeeds
+    - name: Install Trivy
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y wget
+        wget https://github.com/aquasecurity/trivy/releases/download/v0.58.2/trivy_0.58.2_Linux-64bit.deb
+        sudo dpkg -i trivy_0.58.2_Linux-64bit.deb
+      # You can alternatively use a Trivy GitHub Action like `aquasecurity/trivy-action` if preferred.
 
-
-
-# name: Django CI
-
-# on:
-#   push:
-#     branches: [ "main" ]
-#   pull_request:
-#     branches: [ "main" ]
-
-# jobs:
-#   build:
-
-#     runs-on: ubuntu-latest
-#     strategy:
-#       max-parallel: 4
-#       matrix:
-#         python-version: [3.9]
-
-#     steps:
-#     - uses: actions/checkout@v4
-
-#     - name: Set up Python ${{ matrix.python-version }}
-#       uses: actions/setup-python@v3
-#       with:
-#         python-version: ${{ matrix.python-version }}
-
-#     - name: build the docker compose
-#       run: |
-#         echo " bonjour !!! "
-
-#     - name: Install Docker Compose
-#       run: |
-#         sudo apt-get update
-#         sudo apt-get install -y docker-compose
-
-#     - name: Build Docker
-#       run: docker-compose -f docker-compose.yml up -d --build --no-cache
-
-#     - name: Install Trivy
-#       run: |
-#         sudo apt-get update
-#         sudo apt-get install -y wget
-#         wget https://github.com/aquasecurity/trivy/releases/download/v0.58.2/trivy_0.58.2_Linux-64bit.deb
-#         sudo dpkg -i trivy_0.58.2_Linux-64bit.deb
-#       # You can alternatively use a Trivy GitHub Action like `aquasecurity/trivy-action` if preferred.
-
-#     - name: List Docker Images
-#       run: docker images
+    - name: List Docker Images
+      run: docker images
     
-#     - name: SonarQube Scan
-#       uses: SonarSource/sonarqube-scan-action@v1
-#       with:
-#         projectBaseDir: .
-#         args: >
-#           -Dsonar.organization=my-fuh
-#           -Dsonar.projectKey=DjangoApp
-#       env:
-#         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-#         SONAR_HOST_URL: ${{ vars.SONAR_HOST_URL }}
-#     # - name: Run Trivy Vulnerability Scan
-#     #   run: |
-#     #     trivy image --exit-code 1 --severity HIGH,CRITICAL ekila-streams
-#     #   # Replace 'ekila-streams' with the actual image name from your docker-compose.yml.
-#     #   # --exit-code 1 makes the step fail if HIGH or CRITICAL vulnerabilities are found.
-#     #   # Adjust severity levels (e.g., MEDIUM,LOW) as needed.
+    - name: SonarQube Scan
+      uses: SonarSource/sonarqube-scan-action@v1
+      with:
+        projectBaseDir: .
+        args: > 
+          -Dsonar.projectKey=DjangoApp
+      env:
+        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        SONAR_HOST_URL: ${{ vars.SONAR_HOST_URL }}
+    # - name: Run Trivy Vulnerability Scan
+    #   run: |
+    #     trivy image --exit-code 1 --severity HIGH,CRITICAL ekila-streams
+    #   # Replace 'ekila-streams' with the actual image name from your docker-compose.yml.
+    #   # --exit-code 1 makes the step fail if HIGH or CRITICAL vulnerabilities are found.
+    #   # Adjust severity levels (e.g., MEDIUM,LOW) as needed.
 
 
- 
+  # name: Build
+
+  # on:
+  # push:
+  #   branches:
+  #     - main
+
+
+  # jobs:
+  # build:
+  #   name: Build
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - uses: actions/checkout@v2
+  #       with:
+  #         fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
+  #     - uses: sonarsource/sonarqube-scan-action@master
+  #       env:
+  #         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+  #         SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+  #     # If you wish to fail your job when the Quality Gate is red, uncomment the
+  #     # following lines. This would typically be used to fail a deployment.
+  #     # - uses: sonarsource/sonarqube-quality-gate-action@master
+  #     #   timeout-minutes: 5
+  #     #   env:
+  #     #     SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
