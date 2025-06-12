@@ -1,65 +1,98 @@
-name: Django CI
+
+name: Build
 
 on:
   push:
-    branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
+    branches:
+      - main
+
 
 jobs:
   build:
-
+    name: Build
     runs-on: ubuntu-latest
-    strategy:
-      max-parallel: 4
-      matrix:
-        python-version: [3.9]
-
     steps:
-    - uses: actions/checkout@v4
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
+      - uses: sonarsource/sonarqube-scan-action@master
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+      # If you wish to fail your job when the Quality Gate is red, uncomment the
+      # following lines. This would typically be used to fail a deployment.
+      # - uses: sonarsource/sonarqube-quality-gate-action@master
+      #   timeout-minutes: 5
+      #   env:
+      #     SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
-    - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v3
-      with:
-        python-version: ${{ matrix.python-version }}
 
-    - name: build the docker compose
-      run: |
-        echo " bonjour !!! "
 
-    - name: Install Docker Compose
-      run: |
-        sudo apt-get update
-        sudo apt-get install -y docker-compose
 
-    - name: Build Docker
-      run: docker-compose -f docker-compose.yml up -d --build --no-cache
+# name: Django CI
 
-    - name: Install Trivy
-      run: |
-        sudo apt-get update
-        sudo apt-get install -y wget
-        wget https://github.com/aquasecurity/trivy/releases/download/v0.58.2/trivy_0.58.2_Linux-64bit.deb
-        sudo dpkg -i trivy_0.58.2_Linux-64bit.deb
-      # You can alternatively use a Trivy GitHub Action like `aquasecurity/trivy-action` if preferred.
+# on:
+#   push:
+#     branches: [ "main" ]
+#   pull_request:
+#     branches: [ "main" ]
 
-    - name: List Docker Images
-      run: docker images
+# jobs:
+#   build:
+
+#     runs-on: ubuntu-latest
+#     strategy:
+#       max-parallel: 4
+#       matrix:
+#         python-version: [3.9]
+
+#     steps:
+#     - uses: actions/checkout@v4
+
+#     - name: Set up Python ${{ matrix.python-version }}
+#       uses: actions/setup-python@v3
+#       with:
+#         python-version: ${{ matrix.python-version }}
+
+#     - name: build the docker compose
+#       run: |
+#         echo " bonjour !!! "
+
+#     - name: Install Docker Compose
+#       run: |
+#         sudo apt-get update
+#         sudo apt-get install -y docker-compose
+
+#     - name: Build Docker
+#       run: docker-compose -f docker-compose.yml up -d --build --no-cache
+
+#     - name: Install Trivy
+#       run: |
+#         sudo apt-get update
+#         sudo apt-get install -y wget
+#         wget https://github.com/aquasecurity/trivy/releases/download/v0.58.2/trivy_0.58.2_Linux-64bit.deb
+#         sudo dpkg -i trivy_0.58.2_Linux-64bit.deb
+#       # You can alternatively use a Trivy GitHub Action like `aquasecurity/trivy-action` if preferred.
+
+#     - name: List Docker Images
+#       run: docker images
     
-    - name: SonarQube Scan
-      uses: SonarSource/sonarqube-scan-action@v1
-      with:
-        projectBaseDir: .
-        args: >
-          -Dsonar.organization=my-fuh
-          -Dsonar.projectKey=my-Django
-      env:
-        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        SONAR_HOST_URL: ${{ vars.SONAR_HOST_URL }}
-    # - name: Run Trivy Vulnerability Scan
-    #   run: |
-    #     trivy image --exit-code 1 --severity HIGH,CRITICAL ekila-streams
-    #   # Replace 'ekila-streams' with the actual image name from your docker-compose.yml.
-    #   # --exit-code 1 makes the step fail if HIGH or CRITICAL vulnerabilities are found.
-    #   # Adjust severity levels (e.g., MEDIUM,LOW) as needed.
-  
+#     - name: SonarQube Scan
+#       uses: SonarSource/sonarqube-scan-action@v1
+#       with:
+#         projectBaseDir: .
+#         args: >
+#           -Dsonar.organization=my-fuh
+#           -Dsonar.projectKey=DjangoApp
+#       env:
+#         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+#         SONAR_HOST_URL: ${{ vars.SONAR_HOST_URL }}
+#     # - name: Run Trivy Vulnerability Scan
+#     #   run: |
+#     #     trivy image --exit-code 1 --severity HIGH,CRITICAL ekila-streams
+#     #   # Replace 'ekila-streams' with the actual image name from your docker-compose.yml.
+#     #   # --exit-code 1 makes the step fail if HIGH or CRITICAL vulnerabilities are found.
+#     #   # Adjust severity levels (e.g., MEDIUM,LOW) as needed.
+
+
+ 
