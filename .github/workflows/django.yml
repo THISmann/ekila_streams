@@ -54,7 +54,7 @@ jobs:
           -Dsonar.projectKey=DjangoApp
       env:
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        SONAR_HOST_URL: ${{ vars.SONAR_HOST_URL }}
+        SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
     # - name: Run Trivy Vulnerability Scan
     #   run: |
     #     trivy image --exit-code 1 --severity HIGH,CRITICAL ekila-streams
