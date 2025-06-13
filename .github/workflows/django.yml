@@ -45,7 +45,11 @@ jobs:
 
     - name: List Docker Images
       run: docker images
-    
+
+    #https://docs.sonarsource.com/sonarqube-server/10.8/analyzing-source-code/scanners/scanner-environment/manage-tls-certificates/#introduction-to-server-authentication
+    - name: Workaround for containerized environments
+      run: echo "SONAR_USER_HOME=$HOME/.sonar" >> $GITHUB_ENV
+      
     - name: SonarQube Scan
       uses: SonarSource/sonarqube-scan-action@v1
       with:
@@ -55,6 +59,7 @@ jobs:
       env:
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+        SONAR_ROOT_CERT: ${{ secrets.SONAR_ROOT_CERT }}
     # - name: Run Trivy Vulnerability Scan
     #   run: |
     #     trivy image --exit-code 1 --severity HIGH,CRITICAL ekila-streams
