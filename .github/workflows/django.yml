@@ -45,13 +45,19 @@ jobs:
 
     - name: List Docker Images
       run: docker images
-      
+
+    - name: Bandit
+      run: |
+        pip install bandit
+        bandit --format json --output bandit-report.json --recursive ekila-streams
+        
     - name: SonarQube Scan
       uses: SonarSource/sonarqube-scan-action@v1
       with:
         projectBaseDir: .
         args: > 
           -Dsonar.projectKey=DjangoApp
+          -Dsonar.python.bandit.reportPaths=bandit-report.json
       env:
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
