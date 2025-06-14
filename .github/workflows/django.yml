@@ -23,18 +23,6 @@ jobs:
       with:
         python-version: ${{ matrix.python-version }}
 
-    - name: build the docker compose
-      run: |
-        echo " bonjour !!! "
-
-    - name: Install Docker Compose
-      run: |
-        sudo apt-get update
-        sudo apt-get install -y docker-compose
-
-    - name: Build Docker
-      run: docker-compose -f docker-compose.yml up -d --build --no-cache
-
     - name: Install Trivy
       run: |
         sudo apt-get update
@@ -49,8 +37,10 @@ jobs:
     - name: Bandit
       run: |
         pip install bandit
-        bandit --format json --output $GITHUB_WORKSPACE/bandit-report.json --recursive ekila-streams
+        echo "Start Bandit"
+        bandit --format json --output $GITHUB_WORKSPACE/bandit-report.json --recursive $GITHUB_WORKSPACE/
         cat $GITHUB_WORKSPACE/bandit-report.json
+        echo "Stop bandit"
         
     - name: SonarQube Scan
       uses: SonarSource/sonarqube-scan-action@v1
