@@ -50,6 +50,7 @@ jobs:
       run: |
         pip install bandit
         bandit --format json --output $GITHUB_WORKSPACE/bandit-report.json --recursive ekila-streams
+        cat $GITHUB_WORKSPACE/bandit-report.json
         
     - name: SonarQube Scan
       uses: SonarSource/sonarqube-scan-action@v1
