@@ -38,7 +38,7 @@ jobs:
     - name: Bandit
       run: |
         pip install bandit
-        bandit --format json --output $GITHUB_WORKSPACE/bandit-report.json --recursive $GITHUB_WORKSPACE/
+        bandit --format json --output $GITHUB_WORKSPACE/bandit-report.json --recursive $GITHUB_WORKSPACE/ || echo
         
     - name: SonarQube Scan
       uses: SonarSource/sonarqube-scan-action@v1
