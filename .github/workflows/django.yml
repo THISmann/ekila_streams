@@ -2,9 +2,9 @@ name: Django CI
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "main", "rostbranch" ]
   pull_request:
-    branches: [ "main" ]
+    branches: [ "main", "rostbranch" ]
 
 jobs:
   build:
@@ -23,35 +23,31 @@ jobs:
       with:
         python-version: ${{ matrix.python-version }}
 
-    - name: build the docker compose
-      run: |
-        echo " bonjour !!! "
 
-    - name: Install Docker Compose
-      run: |
-        sudo apt-get update
-        sudo apt-get install -y docker-compose
-
-    - name: Build Docker
-      run: docker-compose -f docker-compose.yml up -d --build --no-cache
-
-    - name: Install Trivy
-      run: |
-        sudo apt-get update
-        sudo apt-get install -y wget
-        wget https://github.com/aquasecurity/trivy/releases/download/v0.58.2/trivy_0.58.2_Linux-64bit.deb
-        sudo dpkg -i trivy_0.58.2_Linux-64bit.deb
-      # You can alternatively use a Trivy GitHub Action like `aquasecurity/trivy-action` if preferred.
+ #   - name: Install Trivy
+ #     run: |
+ #       sudo apt-get update
+ #       sudo apt-get install -y wget
+ #       wget https://github.com/aquasecurity/trivy/releases/download/v0.58.2/trivy_0.58.2_Linux-64bit.deb
+ #       sudo dpkg -i trivy_0.58.2_Linux-64bit.deb
+ #     # You can alternatively use a Trivy GitHub Action like `aquasecurity/trivy-action` if preferred.
 
     - name: List Docker Images
       run: docker images
-      
+
+    - name: Bandit
+      run: |
+        pip install bandit
+        bandit --format json --output $GITHUB_WORKSPACE/bandit-report.json --recursive $GITHUB_WORKSPACE/ || echo
+        
     - name: SonarQube Scan
-      uses: SonarSource/sonarqube-scan-action@v1
+      uses: SonarSource/sonarqube-scan-action@v5.2.0
       with:
         projectBaseDir: .
         args: > 
           -Dsonar.projectKey=DjangoApp
+          -Dsonar.python.bandit.reportPaths=bandit-report.json
+          -X
       env:
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
