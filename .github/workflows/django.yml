@@ -23,25 +23,14 @@ jobs:
       with:
         python-version: ${{ matrix.python-version }}
 
-    - name: build the docker compose
-      run: |
-        echo " bonjour !!! "
 
-    - name: Install Docker Compose
-      run: |
-        sudo apt-get update
-        sudo apt-get install -y docker-compose
-
-    - name: Build Docker
-      run: docker-compose -f docker-compose.yml up -d --build --no-cache
-
-    - name: Install Trivy
-      run: |
-        sudo apt-get update
-        sudo apt-get install -y wget
-        wget https://github.com/aquasecurity/trivy/releases/download/v0.58.2/trivy_0.58.2_Linux-64bit.deb
-        sudo dpkg -i trivy_0.58.2_Linux-64bit.deb
-      # You can alternatively use a Trivy GitHub Action like `aquasecurity/trivy-action` if preferred.
+ #   - name: Install Trivy
+ #     run: |
+ #       sudo apt-get update
+ #       sudo apt-get install -y wget
+ #       wget https://github.com/aquasecurity/trivy/releases/download/v0.58.2/trivy_0.58.2_Linux-64bit.deb
+ #       sudo dpkg -i trivy_0.58.2_Linux-64bit.deb
+ #     # You can alternatively use a Trivy GitHub Action like `aquasecurity/trivy-action` if preferred.
 
     - name: List Docker Images
       run: docker images
@@ -57,7 +46,7 @@ jobs:
         projectBaseDir: .
         args: > 
           -Dsonar.projectKey=DjangoApp
-          -Dsonar.python.bandit.reportPaths=bandit-report.json
+          -Dsonar.python.bandit.reportPaths=$GITHUB_WORKSPACE/bandit-report.json
           -X
       env:
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
