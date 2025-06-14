@@ -57,7 +57,8 @@ jobs:
         projectBaseDir: .
         args: > 
           -Dsonar.projectKey=DjangoApp
-          -Dsonar.python.bandit.reportPaths=/github/workspace/bandit-report.json
+          -Dsonar.python.bandit.reportPaths=bandit-report.json
+          -X
       env:
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
