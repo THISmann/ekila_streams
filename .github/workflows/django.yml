@@ -8,7 +8,6 @@ on:
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
     strategy:
       max-parallel: 4
@@ -23,14 +22,13 @@ jobs:
       with:
         python-version: ${{ matrix.python-version }}
 
-
- #   - name: Install Trivy
- #     run: |
- #       sudo apt-get update
- #       sudo apt-get install -y wget
- #       wget https://github.com/aquasecurity/trivy/releases/download/v0.58.2/trivy_0.58.2_Linux-64bit.deb
- #       sudo dpkg -i trivy_0.58.2_Linux-64bit.deb
- #     # You can alternatively use a Trivy GitHub Action like `aquasecurity/trivy-action` if preferred.
+    # - name: Install Trivy
+    #   run: |
+    #     sudo apt-get update
+    #     sudo apt-get install -y wget
+    #     wget https://github.com/aquasecurity/trivy/releases/download/v0.58.2/trivy_0.58.2_Linux-64bit.deb
+    #     sudo dpkg -i trivy_0.58.2_Linux-64bit.deb
+    #   # You can alternatively use a Trivy GitHub Action like `aquasecurity/trivy-action` if preferred.
 
     - name: List Docker Images
       run: docker images
@@ -67,12 +65,14 @@ jobs:
       continue-on-error: true
 
     - name: Run OWASP Dependency-Check
-      uses: dependency-check/Dependency-Check_Action@v4
+      uses: dependency-check/Dependency-Check_Action@main
       with:
         project: DjangoApp
         path: .
         format: JSON
         out: dependency-check-report.json
+      env:
+        JAVA_HOME: /opt/jdk
       continue-on-error: true
 
     - name: Run CycloneDX Python
@@ -81,60 +81,21 @@ jobs:
         cyclonedx-py requirements -i requirements.txt -o bom.xml || echo "CycloneDX failed to generate SBOM"
       continue-on-error: true
 
-
-    - name: Bandit
+    - name: Run Bandit
       run: |
         pip install bandit
         bandit --format json --output $GITHUB_WORKSPACE/bandit-report.json --recursive $GITHUB_WORKSPACE/ || echo
-        
+
     - name: SonarQube Scan
       uses: SonarSource/sonarqube-scan-action@v5.2.0
       with:
         projectBaseDir: .
-        args: > 
+        args: >
           -Dsonar.projectKey=DjangoApp
           -Dsonar.python.bandit.reportPaths=bandit-report.json
+          -Dsonar.dependencyCheck.jsonReportPath=dependency-check-report.json
+          -Dsonar.python.coverage.reportPaths=coverage-report/cobertura.xml
           -X
       env:
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
-    # - name: Run Trivy Vulnerability Scan
-    #   run: |
-    #     trivy image --exit-code 1 --severity HIGH,CRITICAL ekila-streams
-    #   # Replace 'ekila-streams' with the actual image name from your docker-compose.yml.
-    #   # --exit-code 1 makes the step fail if HIGH or CRITICAL vulnerabilities are found.
-    #   # Adjust severity levels (e.g., MEDIUM,LOW) as needed.
-
-
-  # name: Build
-
-  # on:
-  # push:
-  #   branches:
-  #     - main
-
-
-  # jobs:
-  # build:
-  #   name: Build
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - uses: actions/checkout@v2
-  #       with:
-  #         fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
-  #     - uses: sonarsource/sonarqube-scan-action@master
-  #       env:
-  #         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-  #         SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
-  #     # If you wish to fail your job when the Quality Gate is red, uncomment the
-  #     # following lines. This would typically be used to fail a deployment.
-  #     # - uses: sonarsource/sonarqube-quality-gate-action@master
-  #     #   timeout-minutes: 5
-  #     #   env:
-  #     #     SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-
-
-
-
-
-   
