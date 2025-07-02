@@ -6,14 +6,14 @@ mimetypes.add_type("text/js", ".js", True)
 
 DEBUG = True
 STATIC_ROOT = os.getenv("DJANGO_STATIC_ROOT")
-STATIC_URL = "/static/"
+STATIC_URL = "/var/www/static/"
 
 ALLOWED_HOSTS = ["*"]
 
 # cors configuration
 CORS_ALLOW_ALL_ORIGINS = True
 CORS_ALLOWED_ORIGINS = [
-    os.getenv("FRONT_HOST"),
+    os.getenv("FRONT_HOST", "http://localhost:8030"),
 ]
 
 # Media files (Images)

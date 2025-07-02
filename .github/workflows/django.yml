@@ -35,6 +35,53 @@ jobs:
     - name: List Docker Images
       run: docker images
 
+    - name: Run Gitleaks
+      uses: gitleaks/gitleaks-action@v2
+      with:
+        config-path: .gitleaks.toml
+      continue-on-error: true
+
+    - name: Install kcov and dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y kcov
+        pip install coverage
+      continue-on-error: true
+
+    - name: Run tests with coverage and kcov
+      run: |
+        coverage run --source=. manage.py test
+        kcov --include-path=$GITHUB_WORKSPACE coverage-report coverage run --source=. manage.py test || echo "kcov failed to generate coverage"
+      continue-on-error: true
+
+    - name: Run pip-audit
+      run: |
+        pip install pip-audit
+        pip-audit --output pip-audit-report.json || echo "pip-audit found issues"
+      continue-on-error: true
+
+    - name: Run Safety Check
+      run: |
+        pip install safety
+        safety check --full-report --output json > safety-report.json || echo "Safety found issues"
+      continue-on-error: true
+
+    - name: Run OWASP Dependency-Check
+      uses: dependency-check/Dependency-Check_Action@v4
+      with:
+        project: DjangoApp
+        path: .
+        format: JSON
+        out: dependency-check-report.json
+      continue-on-error: true
+
+    - name: Run CycloneDX Python
+      run: |
+        pip install cyclonedx-bom
+        cyclonedx-py requirements -i requirements.txt -o bom.xml || echo "CycloneDX failed to generate SBOM"
+      continue-on-error: true
+
+
     - name: Bandit
       run: |
         pip install bandit
@@ -85,3 +132,9 @@ jobs:
   #     #   timeout-minutes: 5
   #     #   env:
   #     #     SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+
+
+
+
+
+   

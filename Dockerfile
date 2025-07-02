@@ -51,9 +51,17 @@ RUN poetry export -f requirements.txt --without-hashes --output requirements.txt
 
 #RUN poetry config virtualenvs.create false --local  && poetry lock --no-update && poetry install --without dev
 # Split the failing command for debugging
+# RUN poetry config virtualenvs.create false --local
+# RUN poetry lock
+# RUN poetry install --verbose 
+
+RUN pip install --upgrade pip
+
+RUN pip uninstall zope-interface -y || true
+
 RUN poetry config virtualenvs.create false --local
-RUN poetry lock
-RUN poetry install --verbose 
+RUN poetry install --without dev --no-interaction --no-root
+
 
 COPY . /app
 COPY requirements.txt /app/requirements.txt
@@ -62,5 +70,6 @@ COPY entrypoint.sh /entrypoint.sh
 RUN chown -R ekiladm:ekiladm /app
 RUN tr -d '\r' < /entrypoint.sh > /tmp/entrypoint.sh && mv /tmp/entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
+RUN python manage.py collectstatic --noinput
 ENTRYPOINT ["/entrypoint.sh"]
 EXPOSE $DJANGO_DEV_SERVER_PORT
