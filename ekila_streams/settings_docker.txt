@@ -3,10 +3,15 @@ import os
 
 mimetypes.add_type("text/css", ".css", True)
 mimetypes.add_type("text/js", ".js", True)
+mimetypes.add_type("application/javascript", ".js", True)
+
 
 DEBUG = True
 STATIC_ROOT = os.getenv("DJANGO_STATIC_ROOT", "/var/www/static/")
-STATIC_URL = "static/"
+STATIC_URL = "/static/"
+STATICFILES_DIRS = [
+    os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "static"),
+]
 
 ALLOWED_HOSTS = ["*"]
 
@@ -45,4 +50,4 @@ CHANNEL_LAYERS = {
     },
 }
 
-#we
+

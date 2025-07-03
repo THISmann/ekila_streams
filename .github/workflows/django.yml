@@ -88,8 +88,10 @@ jobs:
           -Dsonar.python.bandit.reportPaths=bandit-report.json
           -Dsonar.dependencyCheck.jsonReportPath=dependency-check-report.json
           -Dsonar.python.coverage.reportPaths=coverage-report/cobertura.xml
-          -Dsonar.externalIssuesReportPaths=gitleaks-report.sarif,pip-audit-report.sarif
+          -Dsonar.externalIssuesReportPaths=pip-audit-report.sarif
           -X
+      #  -Dsonar.externalIssuesReportPaths=gitleaks-report.sarif,pip-audit-report.sarif
+        
       env:
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
