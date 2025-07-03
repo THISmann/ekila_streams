@@ -87,8 +87,7 @@ jobs:
           -Dsonar.projectKey=DjangoApp
           -Dsonar.python.bandit.reportPaths=bandit-report.json
           -Dsonar.dependencyCheck.jsonReportPath=dependency-check-report.json
-          -Dsonar.python.coverage.reportPaths=coverage-report/cobertura.xml
-          -Dsonar.externalIssuesReportPaths=pip-audit-report.sarif
+          -Dsonar.python.coverage.reportPaths=coverage-report/cobertura.xml 
           -X
       #  -Dsonar.externalIssuesReportPaths=gitleaks-report.sarif,pip-audit-report.sarif
         
